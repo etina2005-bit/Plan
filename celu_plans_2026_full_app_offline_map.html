@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ceļu Plāns 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --glass:rgba(255,255,255,0.58);
+  --glass2:rgba(255,255,255,0.76);
+  --border:rgba(255,255,255,0.72);
+  --bsoft:rgba(200,215,240,0.4);
+  --ink:#1c2333;--ink2:#3a4558;--muted:#8494aa;
+  --blue:#5b9bd6;--pink:#c2185b;--green:#4ea68a;--orange:#d4826b;
+  --r:14px;--rsm:10px;
+  --sh:0 4px 28px rgba(90,140,200,0.13);--shsm:0 2px 12px rgba(90,140,200,0.09);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;font-weight:400;color:var(--ink);min-height:100vh;overflow-x:hidden;
+  background:linear-gradient(135deg,#daeaf8 0%,#ecd8f0 50%,#f9c8d8 100%) fixed;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:rgba(194,24,91,0.2);border-radius:10px;}
+
+nav{position:fixed;top:0.85rem;bottom:auto;left:50%;transform:translateX(-50%);z-index:300;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  background:rgba(255,255,255,0.76);backdrop-filter:blur(28px) saturate(2);
+  -webkit-backdrop-filter:blur(28px) saturate(2);
+  border:1px solid var(--border);border-radius:100px;padding:7px;
+  box-shadow:0 8px 32px rgba(90,140,200,0.18),0 2px 8px rgba(194,24,91,0.1);}
+.nt{font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.02em;
+  color:var(--ink2);background:none;border:none;padding:0.55rem 1.35rem;border-radius:100px;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.nt:hover{background:rgba(255,255,255,0.8);color:var(--ink);}
+.nt.active{background:var(--pink);color:white;box-shadow:0 2px 12px rgba(194,24,91,0.35);}
+
+.page{display:none;padding-top:4.25rem;padding-bottom:4rem;min-height:100vh;}
+.page.active{display:block;animation:fi 0.22s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.ph{padding:1rem 1.5rem 1.05rem;text-align:center;}
+.ph h1{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:400;color:var(--ink);margin-bottom:0.4rem;line-height:1.2;}
+.ph h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ph .sub{font-size:0.74rem;color:var(--muted);letter-spacing:0.04em;}
+
+.wrap{max-width:800px;margin:0 auto;padding:0 1.5rem;}
+
+.card{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shsm);}
+
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bsoft);
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shsm);margin-bottom:1.2rem;}
+.sc{background:var(--glass);backdrop-filter:blur(18px);padding:1.15rem 0.5rem;text-align:center;}
+.sv{font-family:'Playfair Display',serif;font-size:1.45rem;display:block;color:var(--ink);margin-bottom:0.18rem;}
+.sl{font-size:0.59rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
+
+.cb{margin-bottom:0.75rem;}
+.chd{display:flex;align-items:center;gap:0.8rem;padding:0.9rem 1.1rem;
+  cursor:pointer;user-select:none;border-radius:var(--r);transition:background 0.16s;}
+.chd:hover{background:rgba(255,255,255,0.1);}
+.cbadge{font-size:0.6rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--blue),var(--pink));
+  color:white;padding:0.24rem 0.6rem;border-radius:100px;flex-shrink:0;}
+.ci{flex:1;min-width:0;}
+.ctitle{font-size:0.9rem;font-weight:500;color:var(--ink);margin-bottom:0.06rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.csub{font-size:0.66rem;color:var(--muted);}
+.cr{display:flex;align-items:center;gap:0.5rem;flex-shrink:0;}
+.ccnt{font-size:0.66rem;color:var(--muted);}
+.chev{color:var(--muted);transition:transform 0.22s;flex-shrink:0;}
+.cb.open .chev{transform:rotate(180deg);}
+.pb{height:2px;background:rgba(200,220,240,0.3);border-radius:100px;overflow:hidden;margin-top:2px;}
+.pf{height:100%;background:linear-gradient(90deg,var(--blue),var(--pink));transition:width 0.4s;}
+.cbody{display:none;border-top:1px solid var(--bsoft);overflow:hidden;border-radius:0 0 var(--r) var(--r);}
+.cb.open .cbody{display:block;animation:sd 0.2s ease;}
+@keyframes sd{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.seg{display:flex;align-items:flex-start;gap:0.8rem;padding:0.78rem 1.1rem;
+  border-bottom:1px solid rgba(200,220,240,0.22);cursor:pointer;transition:background 0.14s;}
+.seg:last-of-type{border-bottom:none;}
+.seg:hover{background:rgba(255,255,255,0.32);}
+.seg.done{opacity:0.52;}
+.schk{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:2px;
+  border:1.5px solid rgba(150,180,220,0.45);background:rgba(255,255,255,0.55);
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.seg.done .schk{background:linear-gradient(135deg,var(--blue),var(--pink));border-color:transparent;}
+.csv{display:none;}
+.seg.done .csv{display:block;}
+.stm{font-size:0.65rem;font-weight:500;color:var(--muted);min-width:52px;white-space:nowrap;padding-top:3px;flex-shrink:0;}
+.sbdy{flex:1;min-width:0;}
+.sttl{font-size:0.84rem;font-weight:500;color:var(--ink);margin-bottom:0.14rem;line-height:1.35;}
+.seg.done .sttl{text-decoration:line-through;color:var(--muted);}
+.sdsc{font-size:0.72rem;color:var(--muted);line-height:1.5;font-weight:300;}
+.sr2{display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;flex-shrink:0;padding-top:2px;min-width:68px;}
+.scst{font-size:0.68rem;font-weight:500;color:var(--ink2);white-space:nowrap;}
+.chip{font-size:0.56rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0.12rem 0.4rem;border-radius:100px;white-space:nowrap;}
+.cf{background:rgba(78,166,138,0.12);color:var(--green);border:1px solid rgba(78,166,138,0.28);}
+.cp{background:rgba(194,24,91,0.1);color:var(--pink);border:1px solid rgba(194,24,91,0.25);}
+.bft{display:flex;justify-content:space-between;align-items:center;
+  padding:0.65rem 1.1rem;border-top:1px solid var(--bsoft);
+  font-size:0.72rem;color:var(--muted);}
+.bft strong{color:var(--ink2);font-weight:600;}
+
+/* costs */
+.cov{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bsoft);
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shsm);margin-bottom:1.5rem;}
+.cvc{background:var(--glass);backdrop-filter:blur(18px);padding:1.2rem;text-align:center;}
+.cvv{font-family:'Playfair Display',serif;font-size:1.5rem;display:block;color:var(--ink);margin-bottom:0.18rem;}
+.cvl{font-size:0.59rem;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
+
+.crow{display:flex;align-items:center;gap:0.8rem;padding:0.7rem 1.1rem;
+  border-bottom:1px solid rgba(200,220,240,0.22);}
+.crow:last-of-type{border-bottom:none;}
+.clbl{flex:1;font-size:0.82rem;color:var(--ink);min-width:0;}
+.cfxd{font-size:0.74rem;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.cinp{font-family:'Inter',sans-serif;font-size:0.78rem;color:var(--ink);font-weight:500;
+  background:rgba(255,255,255,0.65);border:1px solid rgba(200,220,240,0.45);
+  border-radius:8px;padding:0.3rem 0.5rem;outline:none;
+  transition:border-color 0.16s,box-shadow 0.16s;text-align:right;width:95px;flex-shrink:0;}
+.cinp:focus{border-color:rgba(194,24,91,0.4);box-shadow:0 0 0 3px rgba(194,24,91,0.08);}
+.cinp::placeholder{color:var(--muted);font-weight:300;}
+.cdif{font-size:0.72rem;font-weight:600;white-space:nowrap;min-width:58px;text-align:right;flex-shrink:0;}
+.cdif.over{color:var(--orange);}
+.cdif.under{color:var(--green);}
+
+/* map */
+.ml{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;padding:0.9rem 1.1rem;margin-bottom:1.2rem;font-size:0.72rem;color:var(--ink2);}
+.ld{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.li{display:flex;align-items:center;gap:0.4rem;}
+.mab{display:flex;align-items:center;gap:0.5rem;justify-content:center;width:100%;padding:0.85rem;margin-bottom:1.2rem;
+  background:linear-gradient(135deg,rgba(91,155,214,0.12),rgba(194,24,91,0.1));
+  border:1px solid var(--border);border-radius:var(--rsm);
+  font-size:0.78rem;font-weight:600;color:var(--ink);text-decoration:none;
+  cursor:pointer;transition:background 0.18s;font-family:'Inter',sans-serif;}
+.mab:hover{background:linear-gradient(135deg,rgba(91,155,214,0.22),rgba(194,24,91,0.18));}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0.65rem;margin-bottom:1.5rem;}
+.spc{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--border);
+  border-radius:var(--rsm);padding:0.85rem;box-shadow:var(--shsm);transition:background 0.16s;}
+.spc:hover{background:var(--glass2);}
+.spd{font-size:0.62rem;font-weight:500;color:var(--muted);margin-bottom:0.28rem;display:flex;align-items:center;gap:0.35rem;}
+.spn{font-size:0.84rem;font-weight:500;color:var(--ink);margin-bottom:0.16rem;}
+.spnt{font-size:0.7rem;color:var(--muted);font-weight:300;line-height:1.4;}
+.slbl{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;padding:0 0.1rem;}
+.mfw{border-radius:var(--rsm);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shsm);}
+.mfw iframe{width:100%;height:480px;display:block;border:none;}
+
+
+/* offline zoom map */
+.omwrap{border-radius:var(--rsm);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shsm);background:rgba(255,255,255,0.5);position:relative;margin-bottom:1.2rem;}
+.omtop{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;justify-content:space-between;padding:0.7rem 0.8rem;border-bottom:1px solid var(--bsoft);background:rgba(255,255,255,0.45);}
+.omhelp{font-size:0.68rem;color:var(--muted);line-height:1.4;}
+.omctrl{display:flex;gap:0.35rem;}
+.omctrl button{font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:700;color:var(--ink2);background:rgba(255,255,255,0.74);border:1px solid var(--border);border-radius:100px;padding:0.38rem 0.65rem;cursor:pointer;}
+.omctrl button:hover{background:rgba(255,255,255,0.95);}
+#offline-map{height:520px;position:relative;overflow:hidden;touch-action:none;background:linear-gradient(135deg,rgba(220,235,248,0.8),rgba(248,210,226,0.65));cursor:grab;}
+#offline-map.dragging{cursor:grabbing;}
+#omap-layer{position:absolute;left:0;top:0;width:1600px;height:1000px;transform-origin:0 0;}
+#omap-img{position:absolute;left:0;top:0;width:1600px;height:1000px;height:1000px;object-fit:cover;user-select:none;-webkit-user-drag:none;opacity:0.94;}
+#omap-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;color:var(--muted);font-size:0.82rem;background:radial-gradient(circle at 28% 30%,rgba(91,155,214,0.18),transparent 24%),radial-gradient(circle at 70% 60%,rgba(194,24,91,0.16),transparent 30%);}
+#omap-route{position:absolute;left:0;top:0;width:1600px;height:1000px;overflow:visible;pointer-events:none;}
+.omarker{position:absolute;width:22px;height:22px;border-radius:50%;border:2px solid white;box-shadow:0 2px 12px rgba(28,35,51,0.34);transform:translate(-50%,-50%);cursor:pointer;z-index:6;}
+.omarker::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;background:white;border-radius:50%;transform:translate(-50%,-50%);opacity:0.75;}
+.opop{position:absolute;z-index:20;min-width:220px;max-width:270px;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh);padding:0.85rem;transform:translate(-50%,-115%);font-size:0.74rem;color:var(--ink2);display:none;}
+.opop.show{display:block;}
+.opop b{color:var(--ink);font-size:0.84rem;}
+.opop .pk{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:700;margin-top:0.5rem;}
+.opop .pv{line-height:1.45;margin-top:0.08rem;}
+.opop button{position:absolute;right:0.45rem;top:0.35rem;background:none;border:none;font-size:1rem;color:var(--muted);cursor:pointer;}
+.omnote{font-size:0.69rem;color:var(--muted);line-height:1.5;padding:0.7rem 0.85rem;border-top:1px solid var(--bsoft);background:rgba(255,255,255,0.35);}
+
+/* contacts */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.ctc{padding:1.25rem;}
+.ctt{font-size:0.66rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:0.9rem;padding-bottom:0.6rem;border-bottom:1px solid var(--bsoft);}
+.ctr{padding:0.5rem 0;border-bottom:1px solid rgba(200,220,240,0.18);}
+.ctr:last-child{border-bottom:none;}
+.ctk{font-size:0.61rem;font-weight:500;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.18rem;}
+.ctv{font-size:0.81rem;color:var(--ink);line-height:1.55;}
+.ctv a{color:var(--blue);text-decoration:none;}
+.ctv a:hover{text-decoration:underline;}
+.mn{font-weight:600;letter-spacing:0.02em;}
+.ac{color:var(--orange);font-weight:500;}
+.okc{color:var(--green);font-weight:500;}
+.ir{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start;
+  padding:0.52rem 0;border-bottom:1px solid rgba(200,220,240,0.18);}
+.ir:last-child{border-bottom:none;}
+.im{font-size:0.81rem;color:var(--ink);}
+.is{font-size:0.67rem;color:var(--muted);margin-top:0.14rem;}
+.idl{font-size:0.65rem;font-weight:600;color:var(--orange);white-space:nowrap;padding-top:3px;}
+.idl.ok{color:var(--green);}
+.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:0.5rem;}
+.ei{padding:0.7rem 0.9rem;}
+.en{font-size:1.15rem;font-weight:600;color:var(--pink);}
+.en a{color:inherit;text-decoration:none;}
+.el{font-size:0.65rem;color:var(--muted);margin-top:0.1rem;}
+
+#btt{position:fixed;bottom:1.2rem;right:1.5rem;z-index:200;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,0.75);backdrop-filter:blur(16px);
+  border:1px solid var(--border);box-shadow:var(--sh);
+  color:var(--ink2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(10px);pointer-events:none;
+  transition:opacity 0.22s,transform 0.22s;}
+#btt.show{opacity:1;transform:translateY(0);pointer-events:all;}
+#btt:hover{background:rgba(255,255,255,0.95);}
+
+@media(max-width:640px){
+  nav{top:0.65rem;bottom:auto;padding:5px;max-width:calc(100vw - 18px);overflow-x:auto;}
+  .nt{padding:0.48rem 0.82rem;font-size:0.72rem;}
+  .wrap{padding:0 1rem;}
+  .sr{grid-template-columns:repeat(2,1fr);}
+  .cg{grid-template-columns:1fr;}
+  .cov{grid-template-columns:repeat(3,1fr);}
+  .eg{grid-template-columns:repeat(2,1fr);}
+  .ph h1{font-size:1.75rem;}
+  .sg{grid-template-columns:repeat(2,1fr);}
+  .sr2{min-width:55px;}
+  #btt{bottom:5rem;right:1rem;}
+}
+@media(max-width:400px){
+  .nt{padding:0.42rem 0.64rem;font-size:0.66rem;}
+  #offline-map{height:430px;}
+  .sg{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="nt active" onclick="showPage('p1',this)">Maršruts</button>
+  <button class="nt" onclick="showPage('p2',this)">Izmaksas</button>
+  <button class="nt" onclick="showPage('p3',this)">Karte</button>
+  <button class="nt" onclick="showPage('p4',this)">Kontakti</button>
+</nav>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Uz augšu">
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- PAGE 1 -->
+<div id="p1" class="page active">
+  <div class="ph"><h1><em>Maršruta Progress</em></h1>
+    <p class="sub">Valmiera → Varšava → Vīne → Berlīne → Valmiera &nbsp;·&nbsp; 27. maijs – 4. jūnijs 2026</p></div>
+  <div class="wrap">
+    <div class="sr">
+      <div class="sc"><span class="sv">~4 200</span><span class="sl">km kopā</span></div>
+      <div class="sc"><span class="sv">9</span><span class="sl">Dienas</span></div>
+      <div class="sc"><span class="sv" id="spct">0%</span><span class="sl">Pabeigts</span></div>
+      <div class="sc"><span class="sv" id="slft">–</span><span class="sl">Pieturas atlicis</span></div>
+    </div>
+    <div id="dw"></div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="p2" class="page">
+  <div class="ph"><h1><em>Izmaksu Plāns</em></h1>
+    <p class="sub">Noklikšķini uz kategorijas, lai izvērstu · Apmaksātās izmaksas ir fiksētas</p></div>
+  <div class="wrap">
+    <div class="cov">
+      <div class="cvc card"><span class="cvv" id="kb">—</span><span class="cvl">Plānotais</span></div>
+      <div class="cvc card"><span class="cvv" id="ka">—</span><span class="cvl">Iztērēts</span></div>
+      <div class="cvc card"><span class="cvv" id="kd">—</span><span class="cvl">Starpība</span></div>
+    </div>
+    <div id="cw"></div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="p3" class="page">
+  <div class="ph"><h1><em>Maršruta Karte</em></h1>
+    <p class="sub">Visas pieturas, naktsmītnes un sacensību vietas</p></div>
+  <div class="wrap">
+    <div class="card ml">
+      <div class="li"><div class="ld" style="background:#c2185b;"></div> Naktsmītne</div>
+      <div class="li"><div class="ld" style="background:#a07ac4;"></div> Sacensības</div>
+      <div class="li"><div class="ld" style="background:#4ea68a;"></div> Apskate</div>
+      <div class="li"><div class="ld" style="background:#5b9bd6;"></div> Degviela/Tehniskie</div>
+    </div>
+    <a class="mab card" href="https://www.google.com/maps/dir/Valmiera,+Latvia/Warsaw,+Poland/M%C3%B6dling,+Austria/Vienna+Musikverein,+Vienna,+Austria/Berlin,+Germany/Valmiera,+Latvia" target="_blank">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+      </svg>
+      Atvērt pilnu maršrutu Google Maps
+    </a>
+    <div class="slbl">Visas pieturas</div>
+    <div class="sg" id="stops-g"></div>
+    <div class="slbl">Interaktīvā karte</div>
+    <div class="omwrap">
+      <div class="omtop">
+        <div class="omhelp">Offline karte: izmanto failu <strong>route-map.png</strong>. Velc ar pirkstu/peli, zoomo ar pogām vai ritenīti, klikšķini pieturas.</div>
+        <div class="omctrl">
+          <button type="button" onclick="omapZoom(1.18)">+</button>
+          <button type="button" onclick="omapZoom(0.85)">−</button>
+          <button type="button" onclick="omapReset()">Centrēt</button>
+        </div>
+      </div>
+      <div id="offline-map">
+        <div id="omap-layer">
+          <div id="omap-fallback">Ieliec blakus HTML failam attēlu <strong>route-map.png</strong>.<br>Bez tā karte rāda tikai marķierus un ceļa līniju, jo diemžēl ceļi paši nerodas no miglas.</div>
+          <img id="omap-img" src="route-map.png" alt="Ceļa karte" onload="this.style.display='block';document.getElementById('omap-fallback').style.display='none';" onerror="this.style.display='none';">
+          <svg id="omap-route" viewBox="0 0 1600 1000" preserveAspectRatio="none"></svg>
+        </div>
+        <div id="omap-popup" class="opop"></div>
+      </div>
+      <div class="omnote">Lai šī karte strādātu pilnīgi offline, saglabā šo HTML failu un <strong>route-map.png</strong> vienā mapē. Google/OpenStreetMap īstās kartes offline režīmā bez lejupielādētiem tiles parasti nestrādā, jo, protams, pasaule nolēma būt tehniski kaitinoša.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 -->
+<div id="p4" class="page">
+  <div class="ph"><h1><em>Kontakti & Info</em></h1>
+    <p class="sub">Naktsmītnes · Sacensības · Ārkārtas numuri</p></div>
+  <div class="wrap">
+    <div class="cg">
+
+      <div class="card ctc">
+        <div class="ctt">Naktsmītnes</div>
+        <div class="ctr"><div class="ctk">Hotel Arkadia Royal — Varšava</div>
+          <div class="ctv">ul. Czecha 10, Wawer<br><a href="tel:+48225173660">+48 22 517 36 60</a><br>
+            <small style="color:var(--muted);font-size:0.68rem;">Bezmaksas stāvvieta · SPA līdz 23:00</small></div></div>
+        <div class="ctr"><div class="ctk">Steiner Residences — Mēdlings</div>
+          <div class="ctv">Duursmagasse 1, 2340 Mēdlings<br><a href="tel:+436644480400">+43 664 4480400</a></div></div>
+        <div class="ctr"><div class="ctk">Ieregistrēšanās kods</div>
+          <div class="ctv">Numurs: <span class="mn">659513351</span><br>PIN: <span class="mn">077300</span><br>
+            Apstiprinājums: <span class="mn" style="font-size:0.7rem;">3291112877065982311</span></div></div>
+        <div class="ctr"><div class="ctk">Mēdlings atcelšanas termiņš</div>
+          <div class="ctv"><span class="ac">23:59 CEST, 24. maijs 2026</span></div></div>
+        <div class="ctr"><div class="ctk">Berlīne — dzīvoklis</div>
+          <div class="ctv">Mitte · blakus Staatsoper<br><span class="okc">Jau nodrošināts</span></div></div>
+      </div>
+
+      <div class="card ctc">
+        <div class="ctt">Hedda Urbani Wettbewerb</div>
+        <div class="ctr"><div class="ctk">Kontakts</div>
+          <div class="ctv"><a href="mailto:competition@opernfreunde.at">competition@opernfreunde.at</a></div></div>
+        <div class="ctr"><div class="ctk">Mēģinājums — 29. maijs</div>
+          <div class="ctv">Penzingerstrasse 7, 1140 Vīne<br><a href="tel:+431711550">+43 1 71155</a><br>
+            <small style="color:var(--muted);font-size:0.68rem;">Laiks — pēc epasta</small></div></div>
+        <div class="ctr"><div class="ctk">2. Kārta — 30. maijs, 10:00–17:00</div>
+          <div class="ctv">Steinerner Saal, Musikverein<br>Musikvereinsplatz 1, 1010 Vīne<br>
+            <a href="tel:+4315058190">+43 1 505 8190</a></div></div>
+        <div class="ctr"><div class="ctk">Fināls — 31. maijs</div>
+          <div class="ctv">Glaserner Saal / Magna Auditorium<br>Musikverein, 1010 Vīne<br>
+            <small style="color:var(--muted);font-size:0.68rem;">Laiks — pēc ziņas</small></div></div>
+      </div>
+
+      <div class="card ctc">
+        <div class="ctt">Āriju saraksts — Sacensības</div>
+        <div class="ctr"><div class="ctv">1.&ensp;Puccini — <em>La Bohème</em>: "Sì, mi chiamano Mimì"</div></div>
+        <div class="ctr"><div class="ctv">2.&ensp;Bellini — <em>La sonnambula</em>: "Ah! non credea mirarti"</div></div>
+        <div class="ctr"><div class="ctv">3.&ensp;Mozart — <em>Così fan tutte</em>: "Come scoglio immoto resta"</div></div>
+        <div class="ctr"><div class="ctv">4.&ensp;Čaikovskis — <em>Pikova Dāma</em>: Uzvarošā ārija</div></div>
+        <div class="ctr"><div class="ctv">5.&ensp;Šimanovskis — <em>Karalis Rodžers</em>: "Pieśń Roksany"</div></div>
+        <div class="ctr" style="background:rgba(194,24,91,0.04);border-radius:8px;">
+          <div class="ctv" style="font-size:0.72rem;color:var(--muted);">⚠ Ņem visas 5 partitūras + kopijas klavieristam</div></div>
+      </div>
+
+      <div class="card ctc">
+        <div class="ctt">Svarīgi & Atgādinājumi</div>
+        <div class="ir"><div><div class="im">Mēdlings atcelšana — bezmaksas</div><div class="is">Duursmagasse 1</div></div>
+          <div class="idl">24. maijs</div></div>
+        <div class="ir"><div><div class="im">Reihstaga kupols — rezervēt BEZMAKSAS</div>
+          <div class="is"><a href="https://bundestag.de" target="_blank" style="color:var(--blue);font-size:0.68rem;">bundestag.de</a></div></div>
+          <div class="idl">pēc iespējas ātrāk</div></div>
+        <div class="ir"><div><div class="im">CZ vinjete — online EUR 15</div>
+          <div class="is"><a href="https://edalnice.cz" target="_blank" style="color:var(--blue);font-size:0.68rem;">edalnice.cz</a></div></div>
+          <div class="idl">pirms 28. maija</div></div>
+        <div class="ir"><div><div class="im">AT vinjete (10 dienas) — EUR 10</div>
+          <div class="is">Pirmā OMV/BP Austrijā</div></div>
+          <div class="idl">28. maijs</div></div>
+        <div class="ir"><div><div class="im">Mēģinājuma laiks</div>
+          <div class="is">Epasts nāks par 29. maija laiku</div></div>
+          <div class="idl ok">gaida epastu</div></div>
+      </div>
+
+      <div class="card ctc" style="grid-column:1/-1;">
+        <div class="ctt">Ārkārtas numuri</div>
+        <div class="eg">
+          <div class="card ei"><div class="en"><a href="tel:112">112</a></div><div class="el">Eiropa — universāls</div></div>
+          <div class="card ei"><div class="en"><a href="tel:133">133</a></div><div class="el">Austrija — policija</div></div>
+          <div class="card ei"><div class="en"><a href="tel:158">158</a></div><div class="el">Čehija — policija</div></div>
+          <div class="card ei"><div class="en"><a href="tel:110">110</a></div><div class="el">Vācija — policija</div></div>
+          <div class="card ei"><div class="en"><a href="tel:112">112</a></div><div class="el">Polija / Lietuva</div></div>
+          <div class="card ei"><div class="en" style="font-size:0.88rem;"><a href="tel:+493060028480">+49 30 6002 8480</a></div><div class="el">Latvijas konsulāts Berlīnē</div></div>
+          <div class="card ei"><div class="en" style="font-size:0.88rem;"><a href="tel:+498922222222">+49 89 2222 2222</a></div><div class="el">ADAC — auto avārija (DE)</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS=[
+  {n:"D 1",t:"Valmiera → Varšava",d:"Trešdiena, 27. maijs",tot:"~EUR 167",s:[
+    {ti:"05:30",h:"Izbrauc no Valmieras",de:"E77 uz dienvidiem. Apiet Rīgu!"},
+    {ti:"07:15",h:"Degviela — Rīgas apvedceļš",de:"Circle K vai Virši uz A5/E67. 15 min."},
+    {ti:"09:30",h:"Pietura — Panevēžis, Lietuva",de:"Viada vai Circle K. 20 min."},
+    {ti:"11:30",h:"Pusdienas — Kaunas Vecpilsēta",de:"Laisvės aleja. ~EUR 10–15 diviem.",c:"~EUR 15"},
+    {ti:"14:30",h:"Degviela — pie Bjalostoka",de:"Orlen vai BP uz S8/E67. 15 min."},
+    {ti:"16:00",h:"Biedronka — iepirkšanās Vīnei",de:"Konserves, maize, sviests, jogurts, augļi, kafija, vīns x2.",c:"~EUR 30"},
+    {ti:"17:00",h:"Ieregistrēšanās — Hotel Arkadia Royal",de:"ul. Czecha 10, Wawer. Bezmaksas stāvvieta. SPA līdz 23:00.",paid:true},
+    {ti:"17:45",h:"Vilciens uz Varšavas centru",de:"600m uz Warszawa Wawer → Śródmieście. ~EUR 1.50/pers.",c:"~EUR 6"},
+    {ti:"18:15",h:"Vecpilsētas pastaiga",de:"Zamkowy laukums → Vecpilsētas tirgus → Barbikāns. ~1.5 km.",free:true},
+    {ti:"19:30",h:"Vakariņas — Restauracja Zapiecek",de:"Piwna 34/36. Poļu virtuve. Sledz (siļķe krējumā).",c:"~EUR 40"},
+    {ti:"21:00",h:"Nowy Świat vakara pastaiga",de:"Elegants bulvāris. Pēc tam vilciens atpakaļ.",free:true},
+    {ti:"22:00",h:"Viesnīcas SPA",de:"Sauna, tvaika pirts, džakuzi — ietilpst cenā.",free:true},
+  ]},
+  {n:"D 2",t:"Varšava → Brno → Vīne",d:"Ceturtdiena, 28. maijs",tot:"~EUR 143",s:[
+    {ti:"08:00",h:"Brokastis viesnīcā",de:"Ietilpst cenā.",free:true},
+    {ti:"09:00",h:"Izbrauc no Varšavas",de:"S7/S8 uz dienvidiem → Katovici → A1."},
+    {ti:"11:15",h:"Degviela — MOP Wozniki Wschód, A1",de:"Circle K + KFC. 20–25 min.",c:"~EUR 8"},
+    {ti:"12:30",h:"CZ robeža — pirkt vinjeti",de:"Cieszyn/Ostrava. EUR 15, digitāla.",c:"EUR 15"},
+    {ti:"13:30",h:"Pusdienas — Brno, Soul Bistro",de:"Jakubska 9. Tramvajs uz centru. ~EUR 10–15.",c:"~EUR 15"},
+    {ti:"15:30",h:"AT robeža — pirkt vinjeti",de:"D2/A2. Pirmā OMV/BP. EUR 10.",c:"EUR 10"},
+    {ti:"16:30",h:"Pēdējā degviela pirms Vīnes",de:"OMV uz A2. Uzpildīt šeit."},
+    {ti:"18:30",h:"Ieregistrēšanās — Steiner Residences",de:"Duursmagasse 1, Mēdlings. Kods 659513351, PIN 077300.",paid:true},
+    {ti:"19:30",h:"Vakariņas — Bella Rosa vai paša produkti",de:"Bella Rosa 13m no dzīvokļa. Vai no Biedronka produktiem.",c:"~EUR 20"},
+  ]},
+  {n:"D 3",t:"Vīne — Mēģinājums",d:"Piektdiena, 29. maijs",tot:"~EUR 35",s:[
+    {ti:"09:00",h:"Brokastis dzīvoklī",de:"Jogurts, augļi, kafija.",free:true},
+    {ti:"09:30",h:"Balss sasilšana",de:"Skaņojums apstiprināts — kaimiņi nedzirdēs."},
+    {ti:"pēc ziņas",h:"MĒĢINĀJUMS — Mūzikas Universitāte Vīne",de:"Penzingerstrasse 7, 1140 Vīne. Mēdlings → Wien Meidling (18 min) → U6 → iet 5 min. Ņem visas 5 partitūras!",c:"~EUR 8"},
+    {ti:"pēc mēģ.",h:"Naschmarkt (izvēle)",de:"U4 → Kettenbrückengasse. 400 stendi. Pusdienas ~EUR 8–12.",c:"~EUR 12"},
+    {ti:"pēc mēģ.",h:"Šēnbrunnas pils dārzs (izvēle)",de:"UNESCO. Bezmaksas ieeja dārzos.",free:true},
+    {ti:"19:30",h:"Vakariņas",de:"Itāliešu restorāns blakus vai paša produkti.",c:"~EUR 15"},
+  ]},
+  {n:"D 4",t:"Hedda Urbani — 2. Kārta",d:"Sestdiena, 30. maijs",tot:"~EUR 28–73",s:[
+    {ti:"07:30",h:"Vieglas brokastis",de:"Jogurts, banāns, kafija. Neēst smagi.",free:true},
+    {ti:"08:15",h:"Izbrauc uz Musikverein",de:"Mēdlings → Wien Hbf (18 min) → U1/U2 → Karlsplatz → iet 3 min.",c:"~EUR 8"},
+    {ti:"09:30",h:"Ieradies — sasilšana",de:"Bosendorferstrasse ieeja. Sasilšanas telpa. Ņem visas partitūras!"},
+    {ti:"10:00",h:"★ 2. KĀRTAS SACENSĪBAS",de:"Steinerner Saal, Musikverein. 10:00–17:00. Klavierists nodrošināts."},
+    {ti:"17:30",h:"Café Central (izvēle)",de:"Herrengasse 14. Melange + Apfelstrudel.",c:"~EUR 15"},
+    {ti:"17:30",h:"Ringstrasse pastaiga (izvēle)",de:"Staatsoper, Kunsthistorisches Museum, Parlaments, Burgteātris. 40 min.",free:true},
+    {ti:"19:30",h:"Vakariņas (izvēle)",de:"Gasthaus Pöschl (~EUR 45–50) vai Mēdlings restorāns (~EUR 20–25).",c:"~EUR 20–50"},
+  ]},
+  {n:"D 5",t:"Hedda Urbani — Fināls",d:"Svētdiena, 31. maijs",tot:"~EUR 43–88",s:[
+    {ti:"07:30",h:"Vieglas brokastis",de:"Tas pats rīts. Tu esi sagatavojusies.",free:true},
+    {ti:"08:15",h:"Izbrauc uz Musikverein",de:"Mēdlings → Wien Hbf → U1/U2 → Karlsplatz.",c:"~EUR 8"},
+    {ti:"pēc ziņas",h:"★★ FINĀLA SACENSĪBAS",de:"Glaserner Saal / Magna Auditorium, Musikverein. Balvas: 1. vieta, Publikas balva, Arkadij Eisler balva, Musikverein Graz balva."},
+    {ti:"vakars",h:"Svinību vakariņas",de:"A: Zum Wohl, Bäckerstrasse 4 (~EUR 35–40). B (luksus): Steirereck im Stadtpark (~EUR 70–80).",c:"~EUR 35–80"},
+  ]},
+  {n:"D 6",t:"Mēdlings → Prāga → Drēzdene → Berlīne",d:"Pirmdiena, 1. jūnijs",tot:"~EUR 142",s:[
+    {ti:"07:30",h:"Brokastis, iepakot",de:"No pārējiem produktiem. Izrakstīties līdz 10:00!",free:true},
+    {ti:"10:00",h:"Izrakstīšanās — izbraukt",de:"Obligāti līdz 10:00! A2 → Vīnes riņķis → A22/E49 uz ziemeļiem."},
+    {ti:"13:30",h:"Prāga — Kārļa tilts & Vecpilsēta",de:"Stāvvieta Palladium (~EUR 3/st). Kārļa tilts, Astronomiskais pulkstenis. Pusdienas Lokal Dlouha. 1.5h.",c:"~EUR 21"},
+    {ti:"16:30",h:"Drēzdene — Frauenkirche & Elba",de:"Parkhaus Am Zwinger (~EUR 2/st). Frauenkirche, Brühle Terase. 45 min.",c:"~EUR 10"},
+    {ti:"19:00",h:"Ieradies Berlīnē — tavs dzīvoklis",de:"Nolikt mantas. Ej uz Staatsoper. Tava nākotne."},
+    {ti:"19:30",h:"Vakariņas — Augustiner am Gendarmenmarkt",de:"Charlottenstrasse 55. Bavarišu alus nams. Zivju ēdieni.",c:"~EUR 25"},
+  ]},
+  {n:"D 7–8",t:"Berlīne — divas dienas",d:"Otrdiena–Trešdiena, 2.–3. jūnijs",tot:"~EUR 90–163",s:[
+    {ti:"diena 1",h:"Brandenburgas vārti",de:"Pariser Platz. Vislabāk no rīta pirms pūļa.",free:true},
+    {ti:"diena 1",h:"Holokasta memoriāls",de:"Cora-Berliner-Str. 1. 2711 betona plāksnes.",free:true},
+    {ti:"diena 1",h:"Reihstaga kupols",de:"Panorāmas skati. REZERVĒT: bundestag.de",free:true},
+    {ti:"diena 1",h:"Checkpoint Charlie",de:"Friedrichstrasse 43–45. Aukstā kara robežpunkts.",free:true},
+    {ti:"diena 1",h:"East Side Gallery",de:"Mühlenstrasse. 1.3 km Berlīnes mūra, 105 gleznas.",free:true},
+    {ti:"diena 2",h:"Terora Topogrāfija",de:"Niederkirchnerstr. 8. SS/Gestapo mītne. 10:00–20:00.",free:true},
+    {ti:"diena 2",h:"Alte Nationalgalerie (izvēle)",de:"Romantisma glezniecība, Caspar David Friedrich.",c:"EUR 12"},
+    {ti:"diena 2",h:"Berlīnes Dāms",de:"Am Lustgarten. Kupolā — skati uz Staatsoper.",c:"EUR 9"},
+    {ti:"diena 2",h:"Tiergartens parks",de:"210 ha. Ideāls pastaigām jūnijā.",free:true},
+    {ti:"diena 2",h:"Gendarmenmarkt",de:"Berlīnes skaistākais laukums. Divi katedrāļi.",free:true},
+    {ti:"diena 2",h:"Prenzlauer Berg",de:"Tava nākotnes apkaime. Kafejnīcas, radoša vide.",free:true},
+    {ti:"restorāni",h:"Café am Neuen See (izvēle)",de:"Lichtensteinallee 2. Ezera kafejnīca. Forele, lasis.",c:"~EUR 30–40"},
+    {ti:"restorāni",h:"Restaurant Oderberger (izvēle)",de:"Oderberger Str. 57. 19. gs. peldbaseina telpas.",c:"~EUR 35–45"},
+  ]},
+  {n:"D 9",t:"Berlīne → Valmiera (solo)",d:"Ceturtdiena, 4. jūnijs",tot:"~EUR 173",s:[
+    {ti:"05:00",h:"Izbrauc no Berlīnes",de:"A10 → A11/E28 uz ziemeļiem. ~12.5h braukšana."},
+    {ti:"07:30",h:"Degviela + Brokastis — pie Elblogas",de:"Orlen vai BP uz S7/E77. Obligāta kafija.",c:"~EUR 8"},
+    {ti:"09:30",h:"Lietuvas robeža",de:"A5/E67 (Via Baltica) uz ziemeļiem."},
+    {ti:"11:00",h:"Degviela — Kaunas",de:"Viada vai Circle K. 15 min."},
+    {ti:"12:30",h:"Latvijas robeža",de:"A7/E67. 2h līdz Valmierai."},
+    {ti:"13:00",h:"Degviela — Rīgas apvedceļš",de:"Nebraukt Rīgā! Virši vai Circle K."},
+    {ti:"~16:00",h:"IERADIES VALMIERĀ",de:"9 dienas. ~4200 km. Varšava, Vīne, Musikverein, Berlīne. Mājas."},
+  ]},
+];
+
+const COSTS=[
+  {t:"Jau apmaksāts",badge:"apmaksāts",items:[
+    {l:"Hotel Arkadia Royal, Varšava (1 nakts)",b:89.83,paid:true},
+    {l:"Steiner Residences Mēdlings (4 naktis)",b:297.99,paid:true},
+  ]},
+  {t:"Degviela",badge:"D1–D9",items:[
+    {l:"Valmiera → Varšava (~650 km)",b:76},
+    {l:"Varšava → Vīne (~720 km)",b:75},
+    {l:"Mēdlings → Berlīne (~680 km)",b:86},
+    {l:"Berlīne → Valmiera (~1150 km)",b:143},
+  ]},
+  {t:"Ceļi & Vinjetes",badge:"D2",items:[
+    {l:"CZ vinjete (edalnice.cz)",b:15},
+    {l:"AT vinjete (10 dienas)",b:10},
+    {l:"PL ceļu nodevas",b:10},
+  ]},
+  {t:"Ēdiens — Brauciens uz Varšavu",badge:"D1",items:[
+    {l:"Pusdienas Kaunas",b:15},
+    {l:"Biedronka produkti Vīnei",b:30},
+    {l:"Vakariņas Zapiecek + vilciens",b:46},
+  ]},
+  {t:"Ēdiens — Brauciens uz Vīni",badge:"D2",items:[
+    {l:"KFC pietura Wozniki (A1)",b:8},
+    {l:"Pusdienas Brno — Soul Bistro",b:15},
+  ]},
+  {t:"Ēdiens — Vīne",badge:"D3–D5",items:[
+    {l:"Vakariņas Mēdlings (2 naktis)",b:35},
+    {l:"Naschmarkt pusdienas (izvēle)",b:12},
+    {l:"Café Central (izvēle)",b:15},
+    {l:"Svinību vakariņas fināls",b:50},
+  ]},
+  {t:"Sabiedriskais transports",badge:"D1–D5",items:[
+    {l:"Varšava — vilciens tur/atpakaļ",b:6},
+    {l:"Vīne — vilciens Mēdlings↔Vīne (5 dienas)",b:40},
+  ]},
+  {t:"Ēdiens — Prāga & Drēzdene",badge:"D6",items:[
+    {l:"Prāga — stāvvieta + pusdienas",b:21},
+    {l:"Drēzdene — stāvvieta + kafija",b:10},
+  ]},
+  {t:"Ēdiens — Berlīne",badge:"D6–D8",items:[
+    {l:"Vakariņas Augustiner",b:25},
+    {l:"Ēdiens 2 pilnas dienas",b:90},
+  ]},
+  {t:"Ēdiens — Atceļš",badge:"D9",items:[
+    {l:"3 pieturas (Elbloga, Kaunas, Rīga)",b:20},
+  ]},
+  {t:"Apskates vietas (izvēle)",badge:"D7–D8",items:[
+    {l:"Alte Nationalgalerie",b:12},
+    {l:"Berlīnes Dāms",b:9},
+  ]},
+];
+
+const STOPS=[
+  {day:"D1",name:"Valmiera",note:"Starta punkts, 05:30",type:"green"},
+  {day:"D1",name:"Rīgas apvedceļš",note:"Degviela, Circle K",type:"blue"},
+  {day:"D1",name:"Panevēžis, Lietuva",note:"Pietura, E67",type:"blue"},
+  {day:"D1",name:"Kaunas Vecpilsēta",note:"Pusdienas, Laisvės aleja",type:"green"},
+  {day:"D1",name:"Bjalostoka, Polija",note:"Degviela, S8/E67",type:"blue"},
+  {day:"D1",name:"Biedronka, Varšava",note:"Iepirkšanās Vīnei",type:"blue"},
+  {day:"D1",name:"Hotel Arkadia Royal",note:"ul. Czecha 10, Wawer",type:"red"},
+  {day:"D1",name:"Varšavas Vecpilsēta",note:"Zamkowy laukums, Barbikāns",type:"green"},
+  {day:"D2",name:"MOP Wozniki, A1",note:"KFC + Circle K",type:"blue"},
+  {day:"D2",name:"CZ robeža — Cieszyn",note:"Vinjete EUR 15",type:"blue"},
+  {day:"D2",name:"Brno — Soul Bistro",note:"Jakubska 9, pusdienas",type:"green"},
+  {day:"D2",name:"AT robeža — A2",note:"Vinjete EUR 10",type:"blue"},
+  {day:"D2",name:"Steiner Residences",note:"Duursmagasse 1, Mēdlings",type:"red"},
+  {day:"D3",name:"Mūzikas Universitāte Vīne",note:"Penzingerstrasse 7 — MĒĢINĀJUMS",type:"gold"},
+  {day:"D3",name:"Naschmarkt",note:"400 stendi, Wienzeile",type:"green"},
+  {day:"D3",name:"Šēnbrunnas dārzs",note:"UNESCO, bezmaksas",type:"green"},
+  {day:"D4",name:"Musikverein — Steinerner Saal",note:"2. KĀRTA 10:00–17:00",type:"gold"},
+  {day:"D4",name:"Café Central",note:"Herrengasse 14",type:"green"},
+  {day:"D5",name:"Musikverein — Glaserner Saal",note:"FINĀLS",type:"gold"},
+  {day:"D6",name:"Prāga — Kārļa tilts",note:"1.5h pietura, bezmaksas",type:"green"},
+  {day:"D6",name:"Drēzdene — Frauenkirche",note:"45 min, Elba",type:"green"},
+  {day:"D6",name:"Berlīne — Mitte",note:"Tavs dzīvoklis, blakus Staatsoper",type:"red"},
+  {day:"D7–8",name:"Brandenburgas vārti",note:"Pariser Platz",type:"green"},
+  {day:"D7–8",name:"Holokasta memoriāls",note:"Cora-Berliner-Str.",type:"green"},
+  {day:"D7–8",name:"Reihstaga kupols",note:"Rezervēt bundestag.de!",type:"green"},
+  {day:"D7–8",name:"East Side Gallery",note:"1.3 km Berlīnes mūra",type:"green"},
+  {day:"D7–8",name:"Staatsoper Unter den Linden",note:"Tava nākotne — sezona augustā",type:"gold"},
+  {day:"D9",name:"Solo brauciens 05:00",note:"A10/A11/E28",type:"blue"},
+  {day:"D9",name:"Elbloga — brokastis",note:"S7/E77, ~EUR 8",type:"blue"},
+  {day:"D9",name:"Kaunas — degviela",note:"Via Baltica",type:"blue"},
+  {day:"D9 ~16:00",name:"VALMIERA",note:"Mājas. 9 dienas. 4200 km.",type:"red"},
+];
+
+function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+let done=ld('cp26d',{});
+let cvals=ld('cp26c',{});
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='p2')buildCosts();
+  if(id==='p3'){buildMap();setTimeout(buildOfflineMap,80);}
+}
+
+function buildProgress(){
+  const w=document.getElementById('dw');w.innerHTML='';
+  DAYS.forEach((day,di)=>{
+    const tot=day.s.length;
+    const dn=day.s.filter((_,si)=>done[di+'-'+si]).length;
+    const pct=tot?Math.round(dn/tot*100):0;
+    const el=document.createElement('div');
+    el.className='cb card'+(dn>0?' open':'');
+    el.innerHTML=
+      '<div class="chd" onclick="this.closest(\'.cb\').classList.toggle(\'open\')">'+
+        '<span class="cbadge">'+day.n+'</span>'+
+        '<div class="ci"><div class="ctitle">'+day.t+'</div><div class="csub">'+day.d+'</div></div>'+
+        '<div class="cr"><span class="ccnt">'+dn+'/'+tot+'</span>'+
+        '<svg class="chev" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>'+
+      '</div>'+
+      '<div class="pb"><div class="pf" style="width:'+pct+'%"></div></div>'+
+      '<div class="cbody">'+
+        day.s.map(function(seg,si){
+          var isDone=done[di+'-'+si];
+          return '<div class="seg'+(isDone?' done':'')+'" onclick="toggleSeg('+di+','+si+')">'+
+            '<div class="schk"><svg class="csv" width="9" height="7" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+            '<span class="stm">'+seg.ti+'</span>'+
+            '<div class="sbdy"><div class="sttl">'+seg.h+'</div>'+(seg.de?'<div class="sdsc">'+seg.de+'</div>':'')+'</div>'+
+            '<div class="sr2">'+
+              (seg.free?'<span class="chip cf">bezmaksas</span>':'')+
+              (seg.paid?'<span class="chip cp">apmaksāts</span>':'')+
+              (seg.c&&!seg.free&&!seg.paid?'<span class="scst">'+seg.c+'</span>':'')+
+            '</div></div>';
+        }).join('')+
+        '<div class="bft"><span>Dienas budžets</span><strong>'+day.tot+'</strong></div>'+
+      '</div>';
+    w.appendChild(el);
+  });
+  updateStats();
+}
+
+function toggleSeg(di,si){
+  var k=di+'-'+si;done[k]=!done[k];sv('cp26d',done);buildProgress();
+if(location.hash==='#p3'){showPage('p3',document.querySelector("button[onclick*=\"p3\"]"));}
+}
+function updateStats(){
+  var tot=DAYS.reduce(function(a,d){return a+d.s.length;},0);
+  var n=Object.values(done).filter(Boolean).length;
+  document.getElementById('spct').textContent=tot?Math.round(n/tot*100)+'%':'0%';
+  document.getElementById('slft').textContent=tot-n;
+}
+
+function buildCosts(){
+  var w=document.getElementById('cw');w.innerHTML='';
+  COSTS.forEach(function(cat,ci){
+    var catB=cat.items.reduce(function(a,i){return a+i.b;},0);
+    var catA=0,catH=false;
+    cat.items.forEach(function(item,ii){
+      var k=ci+'-'+ii;
+      if(item.paid){catA+=item.b;catH=true;}
+      else if(cvals[k]!==undefined&&cvals[k]!==''){catA+=parseFloat(cvals[k])||0;catH=true;}
+    });
+    var catPct=catH?Math.min(Math.round(catA/catB*100),100):0;
+    var el=document.createElement('div');
+    el.className='cb card';
+    var rows=cat.items.map(function(item,ii){
+      var k=ci+'-'+ii;
+      if(item.paid){
+        return '<div class="crow">'+
+          '<div class="clbl">'+item.l+'</div>'+
+          '<span class="chip cp" style="flex-shrink:0;">apmaksāts</span>'+
+          '<div class="cfxd">EUR '+item.b.toFixed(2)+'</div>'+
+          '<div class="cdif under">✓</div>'+
+        '</div>';
+      }
+      var av=cvals[k]!==undefined?cvals[k]:'';
+      var diff=av!==''?parseFloat(av)-item.b:null;
+      var dtxt=diff!==null?(diff>=0?'+':'')+diff.toFixed(0):'';
+      var dcls=diff!==null?(diff>0.5?'over':'under'):'';
+      return '<div class="crow">'+
+        '<div class="clbl">'+item.l+'</div>'+
+        '<div class="cfxd">EUR '+item.b.toFixed(2)+'</div>'+
+        '<input class="cinp" type="number" step="0.01" min="0" placeholder="ievadi" value="'+av+'" oninput="updateCost(\''+k+'\',this.value)">'+
+        '<div class="cdif '+dcls+'">'+(dtxt?'EUR '+dtxt:'')+'</div>'+
+      '</div>';
+    }).join('');
+    el.innerHTML=
+      '<div class="chd" onclick="this.closest(\'.cb\').classList.toggle(\'open\')">'+
+        '<span class="cbadge">'+cat.badge+'</span>'+
+        '<div class="ci"><div class="ctitle">'+cat.t+'</div>'+
+        '<div class="csub">Budžets: EUR '+catB.toFixed(0)+(catH?' · Iztērēts: EUR '+catA.toFixed(0):'')+'</div></div>'+
+        '<svg class="chev" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>'+
+      '</div>'+
+      '<div class="pb"><div class="pf" style="width:'+catPct+'%"></div></div>'+
+      '<div class="cbody">'+rows+
+        '<div class="bft"><span>Kategorijas budžets</span><strong>EUR '+catB.toFixed(0)+'</strong></div>'+
+      '</div>';
+    w.appendChild(el);
+  });
+  recalc();
+}
+
+function updateCost(k,v){
+  cvals[k]=v===''?'':parseFloat(v)||0;sv('cp26c',cvals);
+  buildCosts();
+}
+function recalc(){
+  var b=0,a=0,has=false;
+  COSTS.forEach(function(cat,ci){cat.items.forEach(function(item,ii){
+    b+=item.b;var k=ci+'-'+ii;
+    if(item.paid){a+=item.b;has=true;}
+    else if(cvals[k]!==undefined&&cvals[k]!==''){a+=parseFloat(cvals[k])||0;has=true;}
+  });});
+  document.getElementById('kb').textContent='EUR '+b.toFixed(0);
+  var ae=document.getElementById('ka'),de=document.getElementById('kd');
+  if(has){
+    ae.textContent='EUR '+a.toFixed(0);ae.style.color='var(--blue)';
+    var d=a-b;
+    de.textContent=(d>=0?'+':'')+' EUR '+d.toFixed(0);
+    de.style.color=d>0?'var(--orange)':'var(--green)';
+  }else{
+    ae.textContent='—';ae.style.color='var(--muted)';
+    de.textContent='—';de.style.color='var(--muted)';
+  }
+}
+
+var tC={red:'#c2185b',gold:'#a07ac4',green:'#4ea68a',blue:'#5b9bd6'};
+function buildMap(){
+  var g=document.getElementById('stops-g');
+  if(g.children.length>0)return;
+  g.innerHTML=STOPS.map(function(s){
+    return '<div class="spc">'+
+      '<div class="spd"><span style="width:8px;height:8px;border-radius:50%;background:'+tC[s.type]+';display:inline-block;flex-shrink:0;"></span>'+s.day+'</div>'+
+      '<div class="spn">'+s.name+'</div>'+
+      '<div class="spnt">'+s.note+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+
+var omapState={scale:0.55,x:0,y:0,drag:false,sx:0,sy:0,ox:0,oy:0,built:false};
+var omapStops=[
+  {name:"Valmiera",x:1440,y:785,type:"green",address:"Valmiera, Latvija",info:"Starta punkts. Izbraukšana 05:30.",cost:"EUR 0"},
+  {name:"Rīgas apvedceļš",x:1380,y:735,type:"blue",address:"A5/E67, Rīgas apvedceļš",info:"Degviela. Circle K vai Virši.",cost:"Pēc degvielas daudzuma"},
+  {name:"Panevēžis",x:1295,y:640,type:"blue",address:"Panevėžys, Lietuva",info:"Īsa pietura uz Via Baltica.",cost:"EUR 0–5"},
+  {name:"Kaunas Vecpilsēta",x:1210,y:570,type:"green",address:"Kaunas Old Town / Laisvės alėja",info:"Pusdienas un īsa pastaiga.",cost:"~EUR 15"},
+  {name:"Hotel Arkadia Royal",x:890,y:545,type:"red",address:"ul. Czecha 10, Wawer, Warsaw",info:"Naktsmītne. Bezmaksas stāvvieta, SPA līdz 23:00.",cost:"EUR 89.83, apmaksāts"},
+  {name:"MOP Wozniki Wschód",x:800,y:675,type:"blue",address:"A1, MOP Woźniki Wschód, Polija",info:"Degviela/KFC pietura.",cost:"~EUR 8"},
+  {name:"Brno — Soul Bistro",x:610,y:760,type:"green",address:"Jakubská 9, Brno",info:"Pusdienas pa ceļam uz Vīni.",cost:"~EUR 15"},
+  {name:"Steiner Residences",x:475,y:815,type:"red",address:"Duursmagasse 1, 2340 Mödling",info:"Naktsmītne pie Vīnes. Kods/PIN kontaktu lapā.",cost:"EUR 297.99, apmaksāts"},
+  {name:"Musikverein Vienna",x:492,y:800,type:"gold",address:"Musikvereinsplatz 1, 1010 Wien",info:"Hedda Urbani Wettbewerb: 2. kārta un fināls.",cost:"Transports ~EUR 8/dienā"},
+  {name:"Prāga — Kārļa tilts",x:600,y:690,type:"green",address:"Karlův most, Praha",info:"1.5h pietura, vecpilsēta.",cost:"~EUR 21"},
+  {name:"Drēzdene — Frauenkirche",x:575,y:585,type:"green",address:"Frauenkirche, Dresden",info:"45 min pietura pie Elbas.",cost:"~EUR 10"},
+  {name:"Berlin Mitte",x:495,y:465,type:"red",address:"Mitte, Berlin, blakus Staatsoper Unter den Linden",info:"Dzīvoklis, Berlīnes apskate, Staatsoper zona.",cost:"Ēdiens ~EUR 90 divām dienām"},
+  {name:"Elbloga — brokastis",x:930,y:430,type:"blue",address:"Elbląg apkārtne, S7/E77",info:"Solo atceļš. Degviela + brokastis.",cost:"~EUR 8"},
+  {name:"Kaunas — degviela",x:1210,y:570,type:"blue",address:"Kaunas, Lietuva",info:"Degviela Via Baltica.",cost:"Pēc degvielas daudzuma"},
+  {name:"Valmiera — mājas",x:1440,y:785,type:"red",address:"Valmiera, Latvija",info:"Ierašanās mājās. 9 dienas, ~4200 km.",cost:"Ceļš pabeigts"}
+];
+var omapColors={red:"#c2185b",gold:"#a07ac4",green:"#4ea68a",blue:"#5b9bd6"};
+
+function buildOfflineMap(){
+  if(omapState.built)return;
+  var map=document.getElementById("offline-map");
+  var layer=document.getElementById("omap-layer");
+  var svg=document.getElementById("omap-route");
+  if(!map||!layer||!svg)return;
+
+  var pts=omapStops.map(function(s){return s.x+","+s.y;}).join(" ");
+  svg.innerHTML='<polyline points="'+pts+'" fill="none" stroke="#c2185b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.72"/><polyline points="'+pts+'" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.72"/>';
+
+  omapStops.forEach(function(s,i){
+    var m=document.createElement("button");
+    m.type="button";
+    m.className="omarker";
+    m.style.left=s.x+"px";
+    m.style.top=s.y+"px";
+    m.style.background=omapColors[s.type]||"#5b9bd6";
+    m.title=s.name;
+    m.onclick=function(e){e.stopPropagation();omapPopup(s);};
+    layer.appendChild(m);
+  });
+
+  map.addEventListener("pointerdown",function(e){
+    omapState.drag=true;omapState.sx=e.clientX;omapState.sy=e.clientY;omapState.ox=omapState.x;omapState.oy=omapState.y;
+    map.classList.add("dragging");
+  });
+  window.addEventListener("pointermove",function(e){
+    if(!omapState.drag)return;
+    omapState.x=omapState.ox+(e.clientX-omapState.sx);
+    omapState.y=omapState.oy+(e.clientY-omapState.sy);
+    omapApply();
+  });
+  window.addEventListener("pointerup",function(){
+    omapState.drag=false;
+    map.classList.remove("dragging");
+  });
+  map.addEventListener("wheel",function(e){
+    e.preventDefault();
+    omapZoom(e.deltaY<0?1.12:0.9,e.clientX,e.clientY);
+  },{passive:false});
+  map.addEventListener("click",function(){omapClose();});
+
+  omapReset();
+  omapState.built=true;
+}
+
+function omapApply(){
+  var layer=document.getElementById("omap-layer");
+  if(layer)layer.style.transform="translate("+omapState.x+"px,"+omapState.y+"px) scale("+omapState.scale+")";
+}
+
+function omapZoom(factor,cx,cy){
+  var map=document.getElementById("offline-map");
+  if(!map)return;
+  var old=omapState.scale;
+  var next=Math.max(0.32,Math.min(2.8,old*factor));
+  var rect=map.getBoundingClientRect();
+  cx=(cx||rect.left+rect.width/2)-rect.left;
+  cy=(cy||rect.top+rect.height/2)-rect.top;
+  var wx=(cx-omapState.x)/old;
+  var wy=(cy-omapState.y)/old;
+  omapState.scale=next;
+  omapState.x=cx-wx*next;
+  omapState.y=cy-wy*next;
+  omapApply();
+  omapClose();
+}
+
+function omapReset(){
+  var map=document.getElementById("offline-map");
+  if(!map)return;
+  var rect=map.getBoundingClientRect();
+  omapState.scale=Math.min(rect.width/1600,rect.height/1000)*0.96;
+  omapState.x=(rect.width-1600*omapState.scale)/2;
+  omapState.y=(rect.height-1000*omapState.scale)/2;
+  omapApply();
+  omapClose();
+}
+
+function omapPopup(s){
+  var p=document.getElementById("omap-popup");
+  if(!p)return;
+  p.innerHTML='<button type="button" onclick="omapClose()">×</button><b>'+s.name+'</b><div class="pk">Adrese</div><div class="pv">'+s.address+'</div><div class="pk">Info</div><div class="pv">'+s.info+'</div><div class="pk">Izmaksas</div><div class="pv">'+s.cost+'</div>';
+  p.style.left=(omapState.x+s.x*omapState.scale)+"px";
+  p.style.top=(omapState.y+s.y*omapState.scale)+"px";
+  p.classList.add("show");
+}
+
+function omapClose(){
+  var p=document.getElementById("omap-popup");
+  if(p)p.classList.remove("show");
+}
+
+var btt=document.getElementById('btt');
+window.addEventListener('scroll',function(){btt.classList.toggle('show',window.scrollY>300);},{passive:true});
+
+buildProgress();
+if(location.hash==='#p3'){showPage('p3',document.querySelector("button[onclick*=\"p3\"]"));}
+</script>
+</body>
+</html>
